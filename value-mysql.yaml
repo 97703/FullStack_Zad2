@@ -1,0 +1,24 @@
+mysqlRootPassword: "rootpass"
+mysqlUser: "app"
+mysqlPassword: "apppass"
+mysqlDatabase: "appdb"
+
+livenessProbe:
+  initialDelaySeconds: 60
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+
+readinessProbe:
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+
+service:
+  type: ClusterIP
+
+strategy:
+  type: Recreate
+
+timezone: "UTC"

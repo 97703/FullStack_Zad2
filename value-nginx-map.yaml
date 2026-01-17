@@ -1,0 +1,41 @@
+persistence:
+  main:
+    enabled: true
+    type: configMap
+    name: lemp-app
+    mountPath: /var/www/html
+
+service:
+  main:
+    enabled: true
+    type: ClusterIP
+    ports:
+      http:
+        enabled: true
+
+controller:
+  type: deployment
+  strategy: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 0
+    maxSurge: 1
+  mainContainer:
+    ports:
+      http:
+        enabled: true
+
+ingress:
+  main:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - host: brilliantapp.zad
+        paths:
+          - path: /
+            pathType: Prefix
+            service:
+              name: nginx-php
+              port: 8080
+
+env:
+  TZ: "UTC"
