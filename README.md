@@ -316,23 +316,23 @@ CREATE TABLE attendance (
 ```yaml
 persistence:
   main:
-    enabled: true
-    type: configMap
-    name: lemp-app
-    mountPath: /var/www/html
+    enabled: true # włącza mechanizm podpinania wolumenu do kontenera
+    type: configMap # źródłem danych montowanych do kontenera jest ConfigMap, a nie PVC
+    name: lemp-app # nazwa ConfigMap, która zostanie zamontowana jako wolumen
+    mountPath: /var/www/html # określa ścieżkę w kontenerze, pod którą ConfigMap zostanie podmontowana
 
 ingress:
   main:
-    enabled: true
-    ingressClassName: nginx
+    enabled: true # włącza tworzenie zasobu Ingress
+    ingressClassName: nginx # nazwa kontrolera, który będzie obsługiwać Ingress
     hosts:
-      - host: brilliantapp.zad
+      - host: brilliantapp.zad # domena, pod którą aplikacja będzie dostępna
         paths:
-          - path: /
+          - path: / # ścieżki zaczynające się od / będą kierowane do aplikacji
             pathType: Prefix
             service:
-              name: nginx-php
-              port: 8080
+              name: nginx-php # ruch HTTP zostanie przekierowany do serwisu nginx-php
+              port: 8080 # wystawia aplikację na porcie 8080
 ```
 
 <p align="justify">Po dodaniu konfiguracji Ingressu i&nbsp;ConfigMap wykonano aktualizację wdrożenia za pomocą polecenia:</p>
@@ -427,14 +427,14 @@ ingress:
 **value-nginx-map.yaml**
 ```yaml
 controller:
-  type: deployment
-  strategy: RollingUpdate
+  type: deployment # typ zasobu
+  strategy: RollingUpdate # aktualizacje będą wykonywane stopniowo
   rollingUpdate:
-    maxUnavailable: 0
-    maxSurge: 1
+    maxUnavailable: 0 # żaden pod nie może być niedostępny
+    maxSurge: 1 # kubernetes może utworzyć jeden dodatkowy pod ponad pożądaną liczbę replik, aby bezpiecznie przeprowadzić aktualizację
 
 env:
-  TZ: "UTC"
+  TZ: "UTC" # ustawia zmienną środowiskową TZ wewnątrz kontenera
 ```
 
 <p align="justify">Aktualizacja została wykonana poleceniem:</p>
